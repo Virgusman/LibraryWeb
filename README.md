@@ -20,4 +20,5 @@
 <br>
 <br>
 Диаграмма БД:
-![image](https://github.com/Virgusman/LibraryWeb/assets/113599394/8db21ce0-7520-4f37-8e8a-0e91a3550e9c)
+![image](https://github.com/Virgusman/LibraryWeb/assets/113599394/2fbc15e0-a4a3-49a1-8bb6-b3866ecdce64)
+
