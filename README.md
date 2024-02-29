@@ -5,7 +5,7 @@
 
 Задание выполнено в полном объёме.
 
-Используемый стек: Spring Core, Spring MVC, PostgreSQL, JDBC, Maven, thymeleaf
+Используемый стек: Spring Core, Spring MVC, PostgreSQL, JDBC, Maven, thymeleaf. 
 Приложение запускается на Tomcat 10
 
 Скриншоты приложения:
