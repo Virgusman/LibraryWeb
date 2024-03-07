@@ -7,9 +7,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.virgusman.springcourse.dao.PersonDAO;
 import ru.virgusman.springcourse.models.Book;
 import ru.virgusman.springcourse.models.Person;
+import ru.virgusman.springcourse.services.BookService;
+import ru.virgusman.springcourse.services.PersonService;
 
 import java.util.List;
 
@@ -17,17 +18,20 @@ import java.util.List;
 @RequestMapping("/people")
 public class PersonController {
 
-    private final PersonDAO personDAO;
+    private final PersonService personService;
+
+    private final BookService bookService;
 
     @Autowired
-    public PersonController(PersonDAO personDAO) {
-        this.personDAO = personDAO;
+    public PersonController(PersonService personService, BookService bookService) {
+        this.personService = personService;
+        this.bookService = bookService;
     }
 
     //Отображение списка всех читателей
     @GetMapping
     public String allPeople(Model model) {
-        model.addAttribute("peoples", personDAO.getAllPeople());
+        model.addAttribute("peoples", personService.findAll());
         return "people/people";
     }
 
@@ -42,15 +46,18 @@ public class PersonController {
     public String create(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return "people/new";
-        personDAO.save(person);
+        personService.save(person);
         return "redirect:/people";
     }
 
     //Переход на представление читателя
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model) {
-        model.addAttribute("person", personDAO.show(id));
-        List<Book> books = personDAO.getBooks(id);
+        Person person = personService.findOne(id);
+        System.out.println(person);
+        model.addAttribute("person", person);
+        List<Book> books = bookService.findByReader(person);
+        System.out.println(books);
         if (!books.isEmpty()) {
             model.addAttribute("books", books);
         }
@@ -60,14 +67,14 @@ public class PersonController {
     //Удаление читателя
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") int id) {
-        personDAO.delete(id);
+        personService.delete(id);
         return "redirect:/people";
     }
 
     //Переход на форму редактирования читателя
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable("id") int id, Model model) {
-        model.addAttribute("person", personDAO.show(id));
+        model.addAttribute("person", personService.findOne(id));
         return "people/edit";
     }
 
@@ -77,7 +84,7 @@ public class PersonController {
                          @PathVariable("id") int id) {
         if (bindingResult.hasErrors())
             return "people/edit";
-        personDAO.update(id, person);
+        personService.update(id, person);
         return "redirect:/people";
     }
 }

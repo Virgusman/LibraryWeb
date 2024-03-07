@@ -3,15 +3,15 @@ package ru.virgusman.springcourse.validators;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import ru.virgusman.springcourse.dao.BookDAO;
 import ru.virgusman.springcourse.models.Book;
+import ru.virgusman.springcourse.services.BookService;
 
 @Component
 public class BookValidator implements Validator {
-    private BookDAO bookDAO;
+    private final BookService bookService;
 
-    public BookValidator(BookDAO bookDAO) {
-        this.bookDAO = bookDAO;
+    public BookValidator(BookService bookService) {
+        this.bookService = bookService;
     }
 
     @Override
@@ -23,7 +23,7 @@ public class BookValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         Book book = (Book) target;
-        if (bookDAO.countBooks(book) > 0){
+        if (!bookService.countBooks(book).isEmpty()){
             errors.rejectValue("name", "", "Такая книга уже заведена");
         }
     }

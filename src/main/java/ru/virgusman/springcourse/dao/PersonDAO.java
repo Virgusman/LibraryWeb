@@ -12,7 +12,7 @@ import java.util.List;
 @Component
 public class PersonDAO {
 
-    private final JdbcTemplate jdbcTemplate;
+/*    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public PersonDAO(JdbcTemplate jdbcTemplate) {
@@ -50,5 +50,5 @@ public class PersonDAO {
     //Вернуть книги по внешнему ключу читателя
     public List<Book> getBooks(int id) {
         return jdbcTemplate.query("SELECT * FROM book where person_id=?", new Integer[]{id}, new BeanPropertyRowMapper<>(Book.class));
-    }
+    }*/
 }

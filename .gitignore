@@ -4,7 +4,7 @@ target/
 !**/src/test/**/target/
 
 # Игнорируем файл в любой директории проекта
-database.properties
+hibernate.properties
 
 ### IntelliJ IDEA ###
 .idea/modules.xml

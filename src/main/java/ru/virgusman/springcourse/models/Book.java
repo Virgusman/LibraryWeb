@@ -1,27 +1,41 @@
 package ru.virgusman.springcourse.models;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 
+import java.util.Objects;
+
+@Entity
+@Table(name = "book")
 public class Book {
 
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private Integer person_id;
+
     @NotEmpty(message = "Поле обязательно к заполнению")
+    @Column(name = "name")
     private String name;     //Название книги
+    @Column(name = "author")
     private String author;   //Автор книги
     @Min(value = 1000, message = "Год выпуска должен быть больше 1000")
-    @Digits(integer=4, fraction=0, message = "Год должен быть указан в цифровом формате (1900)")
+    @Digits(integer = 4, fraction = 0, message = "Год должен быть указан в цифровом формате (1900)")
+    @Column(name = "year")
     private int year;     //Год издания
 
-    public Book(){
+    @ManyToOne
+    @JoinColumn(name = "person_id", referencedColumnName = "id")
+    private Person owner;
+
+    public Book() {
 
     }
 
-    public Book(int id, Integer person_Id, String name, String author, int year) {
+    public Book(int id, String name, String author, int year) {
         this.id = id;
-        this.person_id = person_Id;
         this.name = name;
         this.author = author;
         this.year = year;
@@ -59,11 +73,24 @@ public class Book {
         this.id = id;
     }
 
-    public Integer getPerson_id() {
-        return person_id;
+    public Person getOwner() {
+        return owner;
     }
 
-    public void setPerson_id(Integer person_id) {
-        this.person_id = person_id;
+    public void setOwner(Person owner) {
+        this.owner = owner;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return year == book.year && Objects.equals(name, book.name) && Objects.equals(author, book.author);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, author, year);
     }
 }
