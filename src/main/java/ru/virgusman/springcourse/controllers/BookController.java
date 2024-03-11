@@ -12,6 +12,8 @@ import ru.virgusman.springcourse.services.BookService;
 import ru.virgusman.springcourse.services.PersonService;
 import ru.virgusman.springcourse.validators.BookValidator;
 
+import java.util.Date;
+
 @Controller
 @RequestMapping("/books")
 public class BookController {
@@ -29,8 +31,19 @@ public class BookController {
 
     //Отображение всех книг
     @GetMapping
-    public String allBooks(Model model) {
-        model.addAttribute("books", bookService.findAll());
+    public String allBooks(@RequestParam(value = "sort_by_year", required = false) boolean sortByYear,
+                           @RequestParam(value = "searchString", required = false, defaultValue = "") String searchString,
+                           Model model) {
+        if (!searchString.isEmpty()) {
+            model.addAttribute("books", bookService.searchBooks(searchString));
+        } else if (sortByYear) {
+            model.addAttribute("books", bookService.findByYear());
+            model.addAttribute("sortYear", true);
+        } else {
+            model.addAttribute("books", bookService.findByYearDescending());
+            model.addAttribute("sortYear", false);
+        }
+        model.addAttribute("searchString", searchString);
         return "books/books";
     }
 
@@ -53,7 +66,7 @@ public class BookController {
     //Отображение представления с книгой
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model,
-                       @ModelAttribute("person") Person person){
+                       @ModelAttribute("person") Person person) {
         Book book = bookService.findOne(id);
         model.addAttribute("book", book);                           //Добавление модели книги
         if (book.getOwner() != null) {                                                  //Если внешний (Читатель) не NULL
@@ -95,6 +108,7 @@ public class BookController {
                                   @PathVariable("id") int id) {
         Book book = bookService.findOne(id);
         book.setOwner(person);
+        book.setDateIssue(new Date());
         bookService.update(id, book);
         return "redirect:/books/{id}";
     }
@@ -104,6 +118,7 @@ public class BookController {
     public String freeBook(@PathVariable("id") int id) {
         Book book = bookService.findOne(id);
         book.setOwner(null);
+        book.setDateIssue(null);
         bookService.update(id, book);
         return "redirect:/books/{id}";
     }

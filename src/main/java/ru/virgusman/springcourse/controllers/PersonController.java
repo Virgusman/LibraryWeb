@@ -30,8 +30,14 @@ public class PersonController {
 
     //Отображение списка всех читателей
     @GetMapping
-    public String allPeople(Model model) {
-        model.addAttribute("peoples", personService.findAll());
+    public String allPeople(@RequestParam(value = "searchString", required = false, defaultValue = "") String searchString,
+                            Model model) {
+        if (!searchString.isEmpty()) {
+            model.addAttribute("peoples", personService.searchPerson(searchString));
+        } else {
+            model.addAttribute("peoples", personService.findAll());
+        }
+        model.addAttribute("searchString", searchString);
         return "people/people";
     }
 
@@ -54,10 +60,8 @@ public class PersonController {
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model) {
         Person person = personService.findOne(id);
-        System.out.println(person);
         model.addAttribute("person", person);
         List<Book> books = bookService.findByReader(person);
-        System.out.println(books);
         if (!books.isEmpty()) {
             model.addAttribute("books", books);
         }

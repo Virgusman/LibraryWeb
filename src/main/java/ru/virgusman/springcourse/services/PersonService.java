@@ -44,4 +44,8 @@ public class PersonService {
         person.setId(id);
         peopleRepository.save(person);
     }
+
+    public List<Person> searchPerson(String searchString) {
+        return peopleRepository.findByFullNameContainingIgnoreCase(searchString);
+    }
 }

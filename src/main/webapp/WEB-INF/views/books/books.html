@@ -12,7 +12,7 @@
 
 <header class="p-3 text-bg-dark">
     <div class="container">
-        <div  class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <ul style="width: 400px;" class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <li><a href="/books" class="nav-link px-2 text-secondary">Книги</a></li>
                 <li><a href="/people" class="nav-link px-2 text-white">Читатели</a></li>
@@ -23,8 +23,20 @@
 <br/>
 <br/>
 
-<button class="btn btn-dark rounded-pill px-3" type="button"
-        onclick="window.location.href = '/books/new';" style="margin-left: 5%;">Новая книга</button>
+<div>
+    <div style="float: left; margin-left: 5%;">
+        <button class="btn btn-dark rounded-pill px-3" type="button"
+                onclick="window.location.href = '/books/new';" >Новая книга
+        </button>
+    </div>
+    <div style="margin-left: 30%;">
+        <form th:method="GET" th:action="@{/books}">
+            <label for="searchString">Поиск книги:</label>
+            <input th:type="text" id="searchString" th:name="searchString" th:value="*{searchString}">
+            <input type="submit" class="btn btn-dark rounded-pill px-3" value="Искать">
+        </form>
+    </div>
+</div>
 
 <div style="margin: 40px 80px 50px;">
     <table class="table table-bordered table-striped">
@@ -32,7 +44,8 @@
         <tr>
             <td>Название книги</td>
             <td>Автор</td>
-            <td width="15%">Год издания</td>
+            <td width="15%" th:if="${sortYear}" ><a href="/books?sort_by_year=false">Год издания</a></td>
+            <td width="15%" th:unless="${sortYear}" ><a href="/books?sort_by_year=true">Год издания</a></td>
         </tr>
         </thead>
         <tbody>

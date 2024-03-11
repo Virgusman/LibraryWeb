@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -29,6 +30,13 @@ public class Book {
     @ManyToOne
     @JoinColumn(name = "person_id", referencedColumnName = "id")
     private Person owner;
+
+    @Column(name = "date_issue")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateIssue;
+
+    /*@Transient
+    private boolean isExpired;*/
 
     public Book() {
 
@@ -81,6 +89,18 @@ public class Book {
         this.owner = owner;
     }
 
+    public Date getDateIssue() {
+        return dateIssue;
+    }
+
+    public void setDateIssue(Date dateIssue) {
+        this.dateIssue = dateIssue;
+    }
+
+    public boolean isExpired() {
+        return (new Date().getTime() - dateIssue.getTime()) / 86400000 > 10;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -93,4 +113,5 @@ public class Book {
     public int hashCode() {
         return Objects.hash(name, author, year);
     }
+
 }

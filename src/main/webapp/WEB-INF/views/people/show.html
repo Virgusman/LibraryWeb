@@ -26,7 +26,8 @@
 <div style="margin-left: 5%" th:if="${books}">
     <p><b>Книги:</b></p>
     <div th:each="book : ${books}">
-        <a th:text="${book.getName() + ', ' + book.getAuthor() + ', ' + book.getYear()}">user</a>
+        <a th:style="${book.isExpired()} ? 'color: red' : 'color: black'"
+           th:text="${book.getName() + ', ' + book.getAuthor() + ', ' + book.getYear()}">user</a>
     </div>
 </div>
 <div style="margin-left: 5%" th:unless="${books}">

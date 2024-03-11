@@ -21,8 +21,20 @@
 <br/>
 <br/>
 
-<button class="btn btn-dark rounded-pill px-3" type="button"
-        onclick="window.location.href = '/people/new';" style="margin-left: 5%;">Новый читатель</button>
+<div>
+    <div style="float: left; margin-left: 5%;">
+        <button class="btn btn-dark rounded-pill px-3" type="button"
+                onclick="window.location.href = '/people/new';">Новый читатель
+        </button>
+    </div>
+    <div style="margin-left: 30%;">
+        <form th:method="GET" th:action="@{/people}">
+            <label for="searchString">Поиск по читателю:</label>
+            <input th:type="text" id="searchString" th:name="searchString" th:value="*{searchString}">
+            <input type="submit" class="btn btn-dark rounded-pill px-3" value="Искать">
+        </form>
+    </div>
+</div>
 
 <div style="margin: 40px 80px 50px;">
     <table class="table table-bordered table-striped">

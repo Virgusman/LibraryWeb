@@ -1,11 +1,13 @@
 package ru.virgusman.springcourse.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.virgusman.springcourse.models.Person;
 import ru.virgusman.springcourse.repositories.BookRepository;
 import ru.virgusman.springcourse.models.Book;
+
 import java.util.List;
 
 @Service
@@ -43,11 +45,24 @@ public class BookService {
         bookRepository.save(book);
     }
 
-    public List<Book> countBooks(Book book){
+    public List<Book> countBooks(Book book) {
         return bookRepository.findByNameAndAuthorAndYear(book.getName(), book.getAuthor(), book.getYear());
     }
 
     public List<Book> findByReader(Person person) {
         return bookRepository.findByOwner(person);
     }
+
+    public List<Book> findByYear() {
+        return bookRepository.findAll(Sort.by("year"));
+    }
+
+    public List<Book> findByYearDescending() {
+        return bookRepository.findAll(Sort.by("year").descending());
+    }
+
+    public List<Book> searchBooks(String searchString) {
+        return bookRepository.findByNameContainingIgnoreCaseOrAuthorContainingIgnoreCase(searchString, searchString);
+    }
+
 }
